@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Virginie ❤️</title>
+
+  <style>
+    :root{
+      --pink1:#ffdde1;
+      --pink2:#ee9ca7;
+      --card:#ffffffea;
+      --text:#1f1f1f;
+      --accent:#ff4d6d;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(circle at top, var(--pink1), var(--pink2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      color:var(--text);
+    }
+
+    #hearts { position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:0; }
+    .heart{
+      position:absolute; bottom:-40px; font-size:22px; opacity:0.9;
+      animation: floatUp linear forwards;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.15));
+    }
+    @keyframes floatUp{
+      from { transform: translateY(0) translateX(0) rotate(0deg); opacity:0.0; }
+      10% { opacity:0.95; }
+      to   { transform: translateY(-120vh) translateX(var(--drift)) rotate(var(--rot)); opacity:0; }
+    }
+
+    .wrap{ position:relative; z-index:2; width:min(920px, 92vw); padding:18px; }
+    .card{
+      background: var(--card);
+      border-radius: 26px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      overflow:hidden;
+      display:grid;
+      grid-template-columns: 1.1fr 1fr;
+      min-height: 520px;
+      backdrop-filter: blur(8px);
+      position:relative;
+    }
+    @media (max-width: 860px){ .card{ grid-template-columns: 1fr; } }
+
+    .left{
+      padding:26px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      justify-content:center;
+    }
+    h1{ margin:0; font-size: clamp(28px, 4vw, 46px); letter-spacing:-0.5px; }
+    .sub{ font-size: clamp(14px, 2vw, 16px); line-height:1.6; margin:0; opacity:0.95; }
+
+    .pillrow{ display:flex; flex-wrap:wrap; gap:10px; margin-top:4px; }
+    .pill{
+      background:#fff;
+      border:1px solid rgba(0,0,0,0.08);
+      padding:9px 12px;
+      border-radius:999px;
+      font-size:13px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+    }
+
+    .ctaRow{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:10px; }
+    button{
+      border:none; padding:14px 18px; border-radius:14px; font-size:16px;
+      cursor:pointer; transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+      user-select:none; font-weight:650;
+    }
+    button:active{ transform: scale(0.98); }
+
+    #yesBtn{
+      background: var(--accent);
+      color:white;
+      box-shadow: 0 18px 30px rgba(255, 77, 109, 0.35);
+    }
+    #yesBtn:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 22px 36px rgba(255, 77, 109, 0.45);
+    }
+
+    #noBtn{
+      background:#f2f2f2;
+      color:#222;
+      box-shadow: 0 14px 26px rgba(0,0,0,0.12);
+      position:relative;
+    }
+
+    .musicBtn{
+      background:#111; color:#fff; opacity:0.92;
+      box-shadow: 0 16px 28px rgba(0,0,0,0.22);
+    }
+    .musicBtn:hover{ opacity:1; }
+
+    .note{ font-size:12.5px; opacity:0.75; margin-top:6px; }
+
+    .right{ position:relative; min-height: 320px; background: #00000010; }
+    .photo{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+    .photo img{ width:100%; height:100%; object-fit:cover; }
+
+    .overlay{
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.05), rgba(0,0,0,0.35));
+      display:flex; align-items:flex-end; padding:18px; color:#fff; gap:10px;
+    }
+    .overlay .mini{
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.25);
+      padding:10px 12px;
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      font-size: 13.5px;
+      line-height:1.35;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.25);
+      max-width: 90%;
+    }
+
+    #confetti { position:fixed; inset:0; pointer-events:none; z-index:3; }
+    .conf{
+      position:absolute; width:10px; height:14px; opacity:0.95;
+      transform: rotate(0deg);
+      animation: confFall linear forwards;
+    }
+    @keyframes confFall{
+      from { transform: translateY(-10vh) rotate(0deg); opacity:1; }
+      to   { transform: translateY(110vh) rotate(720deg); opacity:0; }
+    }
+
+    .modalBack{
+      position:fixed; inset:0; background: rgba(0,0,0,0.45);
+      display:none; align-items:center; justify-content:center; z-index:4; padding:18px;
+    }
+    .modal{
+      width:min(640px, 96vw);
+      background:#fff; border-radius:24px; padding:22px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+      text-align:center;
+    }
+    .modal h2{ margin:0 0 8px 0; font-size: 28px; }
+    .modal p{ margin:8px 0 0 0; line-height:1.55; opacity:0.9; }
+    .modal .close{
+      margin-top:14px; background:#111; color:#fff;
+      padding:12px 16px; border-radius:14px; font-weight:650;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="hearts"></div>
+  <div id="confetti"></div>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="left">
+        <h1>Virginie… my Bubblegum, my Chellam 🍬❤️</h1>
+
+        <p class="sub">
+          I wanted to ask you properly—so I made you this little website.
+          Every time I see you (especially in that <b>red saree</b>), I forget how to act.
+          And me in my <b>black suit</b> next to you? Yeah… we looked unreal.
+        </p>
+
+        <p class="sub">
+          So here’s the question, Bubblegum:
+          <b>Will you be my Valentine?</b> 💘
+        </p>
+
+        <div class="pillrow">
+          <div class="pill">✨ Custom-made for you</div>
+          <div class="pill">💌 One question, one answer</div>
+          <div class="pill">🎶 Music included</div>
+          <div class="pill">💖 Unlimited kisses (redeemable)</div>
+        </div>
+
+        <div class="ctaRow">
+          <button id="yesBtn">Yes 💘</button>
+          <button id="noBtn">No 🙃</button>
+          <button class="musicBtn" id="musicBtn">▶ Play music</button>
+        </div>
+
+        <div class="note">
+          If the music doesn’t start automatically, phones block autoplay—tap “Play music”.
+        </div>
+
+        <audio id="song" preload="auto" loop>
+          <source src="song.mp3" type="audio/mpeg">
+        </audio>
+      </div>
+
+      <div class="right">
+        <div class="photo">
+          <img src="photo.jpg" alt="Us ❤️" />
+        </div>
+
+        <div class="overlay">
+          <div class="mini">
+            “If I had to pick my favourite place… it’s next to you.”
+            <br><span style="opacity:0.85;">— always, your Chellam ❤️</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modalBack" id="modalBack">
+    <div class="modal">
+      <h2>YAYYYYY ❤️</h2>
+      <p>
+        Okay Bubblegum… you just made me the happiest person.
+        <br/>
+        Valentine’s date = <b>locked in</b> 🔒💘
+      </p>
+      <p style="margin-top:10px;">
+        Now screenshot this and send it to me 😌
+      </p>
+      <button class="close" id="closeModal">Close</button>
+    </div>
+  </div>
+
+  <script>
+    const hearts = document.getElementById('hearts');
+    const confetti = document.getElementById('confetti');
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const modalBack = document.getElementById('modalBack');
+    const closeModal = document.getElementById('closeModal');
+    const song = document.getElementById('song');
+    const musicBtn = document.getElementById('musicBtn');
+
+    const heartEmojis = ["❤️","💖","💘","💕","💗","💞","💓","💝","🥰","🌹"];
+    function spawnHeart(){
+      const h = document.createElement('div');
+      h.className = 'heart';
+      h.textContent = heartEmojis[Math.floor(Math.random()*heartEmojis.length)];
+      const left = Math.random() * 100;
+      const size = 16 + Math.random() * 24;
+      const dur = 5 + Math.random() * 6;
+      const drift = (Math.random() * 120 - 60) + "px";
+      const rot = (Math.random() * 240 - 120) + "deg";
+      h.style.left = left + "vw";
+      h.style.fontSize = size + "px";
+      h.style.animationDuration = dur + "s";
+      h.style.setProperty("--drift", drift);
+      h.style.setProperty("--rot", rot);
+      hearts.appendChild(h);
+      setTimeout(() => h.remove(), dur*1000);
+    }
+    setInterval(spawnHeart, 220);
+
+    function burstConfetti(){
+      const pieces = 130;
+      for(let i=0; i<pieces; i++){
+        const c = document.createElement('div');
+        c.className = "conf";
+        c.style.left = (Math.random()*100) + "vw";
+        c.style.top = (-10 - Math.random()*20) + "vh";
+        c.style.animationDuration = (2.8 + Math.random()*2.2) + "s";
+        c.style.animationDelay = (Math.random()*0.15) + "s";
+        const hue = Math.floor(Math.random()*360);
+        c.style.background = `hsl(${hue} 85% 60%)`;
+        const w = 6 + Math.random()*8;
+        const h = 8 + Math.random()*12;
+        c.style.width = w + "px";
+        c.style.height = h + "px";
+        c.style.transform = `rotate(${Math.random()*360}deg)`;
+        confetti.appendChild(c);
+        setTimeout(() => c.remove(), 6000);
+      }
+    }
+
+    let playing = false;
+    async function toggleMusic(){
+      try{
+        if(!playing){
+          await song.play();
+          playing = true;
+          musicBtn.textContent = "⏸ Pause music";
+        }else{
+          song.pause();
+          playing = false;
+          musicBtn.textContent = "▶ Play music";
+        }
+      }catch(e){
+        alert("Tap the button again to start the music 🎶");
+      }
+    }
+    musicBtn.addEventListener("click", toggleMusic);
+
+    yesBtn.addEventListener("click", () => {
+      burstConfetti();
+      modalBack.style.display = "flex";
+      if(!playing){
+        song.play().then(() => {
+          playing = true;
+          musicBtn.textContent = "⏸ Pause music";
+        }).catch(()=>{});
+      }
+    });
+
+    closeModal.addEventListener("click", () => {
+      modalBack.style.display = "none";
+    });
+
+    const noLines = [
+      "No 🙃",
+      "Bubblegum… are you sure? 😳",
+      "Chellam pls 🥺",
+      "Think again 😌",
+      "Virginie… 😭",
+      "Nice try 😘",
+      "That button is fake 😆",
+      "Just press yes 💘"
+    ];
+    let noIndex = 0;
+
+    function moveNoButton(){
+      noIndex = Math.min(noIndex + 1, noLines.length - 1);
+      noBtn.textContent = noLines[noIndex];
+
+      const card = document.querySelector(".card");
+      const rect = card.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+      const pad = 12;
+
+      const maxX = rect.width - btnRect.width - pad*2;
+      const maxY = rect.height - btnRect.height - pad*2;
+
+      const x = pad + Math.random()*Math.max(0, maxX);
+      const y = pad + Math.random()*Math.max(0, maxY);
+
+      noBtn.style.position = "absolute";
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+      noBtn.style.zIndex = 5;
+
+      card.style.position = "relative";
+    }
+
+    noBtn.addEventListener("mouseenter", moveNoButton);
+    noBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      moveNoButton();
+      if(noIndex >= 2 && Math.random() < 0.35){
+        alert("That button is purely decorative 😌❤️");
+      }
+    });
+    noBtn.addEventListener("touchstart", moveNoButton, {passive:true});
+  </script>
+</body>
+</html>
