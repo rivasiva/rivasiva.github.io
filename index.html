@@ -26,6 +26,7 @@
       color:var(--text);
     }
 
+    /* Floating hearts layer */
     #hearts { position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:0; }
     .heart{
       position:absolute; bottom:-40px; font-size:22px; opacity:0.9;
@@ -38,6 +39,7 @@
       to   { transform: translateY(-120vh) translateX(var(--drift)) rotate(var(--rot)); opacity:0; }
     }
 
+    /* Card */
     .wrap{ position:relative; z-index:2; width:min(920px, 92vw); padding:18px; }
     .card{
       background: var(--card);
@@ -90,6 +92,7 @@
       box-shadow: 0 22px 36px rgba(255, 77, 109, 0.45);
     }
 
+    /* "No" button becomes a lil troublemaker */
     #noBtn{
       background:#f2f2f2;
       color:#222;
@@ -126,9 +129,12 @@
       max-width: 90%;
     }
 
+    /* Confetti */
     #confetti { position:fixed; inset:0; pointer-events:none; z-index:3; }
     .conf{
-      position:absolute; width:10px; height:14px; opacity:0.95;
+      position:absolute;
+      width:10px; height:14px;
+      opacity:0.95;
       transform: rotate(0deg);
       animation: confFall linear forwards;
     }
@@ -137,21 +143,33 @@
       to   { transform: translateY(110vh) rotate(720deg); opacity:0; }
     }
 
+    /* Modal */
     .modalBack{
-      position:fixed; inset:0; background: rgba(0,0,0,0.45);
-      display:none; align-items:center; justify-content:center; z-index:4; padding:18px;
+      position:fixed; inset:0;
+      background: rgba(0,0,0,0.45);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:4;
+      padding:18px;
     }
     .modal{
       width:min(640px, 96vw);
-      background:#fff; border-radius:24px; padding:22px;
+      background:#fff;
+      border-radius:24px;
+      padding:22px;
       box-shadow: 0 24px 80px rgba(0,0,0,0.35);
       text-align:center;
     }
     .modal h2{ margin:0 0 8px 0; font-size: 28px; }
     .modal p{ margin:8px 0 0 0; line-height:1.55; opacity:0.9; }
     .modal .close{
-      margin-top:14px; background:#111; color:#fff;
-      padding:12px 16px; border-radius:14px; font-weight:650;
+      margin-top:14px;
+      background:#111;
+      color:#fff;
+      padding:12px 16px;
+      border-radius:14px;
+      font-weight:650;
     }
   </style>
 </head>
@@ -190,16 +208,21 @@
         </div>
 
         <div class="note">
-          If the music doesn’t start automatically, phones block autoplay—tap “Play music”.
+          Phones block autoplay — tap “Play music”. (If it doesn’t start, refresh and tap again.)
         </div>
 
-        <audio id="song" preload="auto" loop>
-          <source src="song.mp3" type="audio/mpeg">
+        <!-- IMPORTANT:
+             Put song.mp3 in the SAME repo folder as index.html (root)
+             and name it exactly "song.mp3" (lowercase).
+        -->
+        <audio id="song" preload="auto" loop playsinline>
+          <source src="song.mp3">
         </audio>
       </div>
 
       <div class="right">
         <div class="photo">
+          <!-- Put photo.jpg in the SAME repo folder as index.html and name it exactly "photo.jpg" -->
           <img src="photo.jpg" alt="Us ❤️" />
         </div>
 
@@ -213,6 +236,7 @@
     </div>
   </div>
 
+  <!-- Yes modal -->
   <div class="modalBack" id="modalBack">
     <div class="modal">
       <h2>YAYYYYY ❤️</h2>
@@ -235,76 +259,93 @@
     const noBtn = document.getElementById('noBtn');
     const modalBack = document.getElementById('modalBack');
     const closeModal = document.getElementById('closeModal');
+
     const song = document.getElementById('song');
     const musicBtn = document.getElementById('musicBtn');
 
+    // --- Floating hearts ---
     const heartEmojis = ["❤️","💖","💘","💕","💗","💞","💓","💝","🥰","🌹"];
     function spawnHeart(){
       const h = document.createElement('div');
       h.className = 'heart';
       h.textContent = heartEmojis[Math.floor(Math.random()*heartEmojis.length)];
-      const left = Math.random() * 100;
-      const size = 16 + Math.random() * 24;
-      const dur = 5 + Math.random() * 6;
+
+      const left = Math.random() * 100;      // vw
+      const size = 16 + Math.random() * 24;  // px
+      const dur  = 5 + Math.random() * 6;    // s
       const drift = (Math.random() * 120 - 60) + "px";
-      const rot = (Math.random() * 240 - 120) + "deg";
+      const rot   = (Math.random() * 240 - 120) + "deg";
+
       h.style.left = left + "vw";
       h.style.fontSize = size + "px";
       h.style.animationDuration = dur + "s";
       h.style.setProperty("--drift", drift);
       h.style.setProperty("--rot", rot);
+
       hearts.appendChild(h);
-      setTimeout(() => h.remove(), dur*1000);
+      setTimeout(() => h.remove(), dur * 1000);
     }
     setInterval(spawnHeart, 220);
 
+    // --- Confetti burst ---
     function burstConfetti(){
-      const pieces = 130;
+      const pieces = 140;
       for(let i=0; i<pieces; i++){
         const c = document.createElement('div');
         c.className = "conf";
+
         c.style.left = (Math.random()*100) + "vw";
-        c.style.top = (-10 - Math.random()*20) + "vh";
+        c.style.top  = (-10 - Math.random()*20) + "vh";
         c.style.animationDuration = (2.8 + Math.random()*2.2) + "s";
-        c.style.animationDelay = (Math.random()*0.15) + "s";
+        c.style.animationDelay    = (Math.random()*0.15) + "s";
+
         const hue = Math.floor(Math.random()*360);
         c.style.background = `hsl(${hue} 85% 60%)`;
+
         const w = 6 + Math.random()*8;
         const h = 8 + Math.random()*12;
-        c.style.width = w + "px";
+        c.style.width  = w + "px";
         c.style.height = h + "px";
-        c.style.transform = `rotate(${Math.random()*360}deg)`;
+
         confetti.appendChild(c);
         setTimeout(() => c.remove(), 6000);
       }
     }
 
+    // --- Music control (more reliable on phones) ---
     let playing = false;
-    async function toggleMusic(){
-      try{
-        if(!playing){
-          await song.play();
-          playing = true;
-          musicBtn.textContent = "⏸ Pause music";
-        }else{
-          song.pause();
-          playing = false;
-          musicBtn.textContent = "▶ Play music";
-        }
-      }catch(e){
-        alert("Tap the button again to start the music 🎶");
-      }
-    }
-    musicBtn.addEventListener("click", toggleMusic);
 
-    yesBtn.addEventListener("click", () => {
+    async function startMusic(){
+      // Force load right before play helps iOS/Safari sometimes
+      try { song.load(); } catch(e) {}
+      await song.play();
+      playing = true;
+      musicBtn.textContent = "⏸ Pause music";
+    }
+
+    function stopMusic(){
+      song.pause();
+      playing = false;
+      musicBtn.textContent = "▶ Play music";
+    }
+
+    musicBtn.addEventListener("click", async () => {
+      try{
+        if(!playing) await startMusic();
+        else stopMusic();
+      }catch(e){
+        alert("If the music didn’t start, refresh the page and tap Play again 🎶");
+      }
+    });
+
+    // --- Yes button ---
+    yesBtn.addEventListener("click", async () => {
       burstConfetti();
       modalBack.style.display = "flex";
+
+      // Try starting music when she says yes (still requires gesture — click counts)
       if(!playing){
-        song.play().then(() => {
-          playing = true;
-          musicBtn.textContent = "⏸ Pause music";
-        }).catch(()=>{});
+        try{ await startMusic(); }catch(e){}
       }
     });
 
@@ -312,6 +353,7 @@
       modalBack.style.display = "none";
     });
 
+    // --- No button dodge ---
     const noLines = [
       "No 🙃",
       "Bubblegum… are you sure? 😳",
@@ -336,12 +378,12 @@
       const maxX = rect.width - btnRect.width - pad*2;
       const maxY = rect.height - btnRect.height - pad*2;
 
-      const x = pad + Math.random()*Math.max(0, maxX);
-      const y = pad + Math.random()*Math.max(0, maxY);
+      const x = pad + Math.random() * Math.max(0, maxX);
+      const y = pad + Math.random() * Math.max(0, maxY);
 
       noBtn.style.position = "absolute";
       noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
+      noBtn.style.top  = y + "px";
       noBtn.style.zIndex = 5;
 
       card.style.position = "relative";
